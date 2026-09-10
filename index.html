@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multiplication Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Fredoka:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1F9D62;
+  --green-soft:#E4F6EC;
+  --blue:#2C6FD1;
+  --blue-soft:#E6EFFB;
+  --purple:#7248B4;
+  --purple-soft:#F0E9FA;
+  --red:#D63A3A;
+  --red-soft:#FCEAEA;
+  --ink:#1E2430;
+  --muted:#5C6577;
+  --paper:#FFFFFF;
+  --bg:#F5F8FD;
+  --dot:20px;
+}
+*{box-sizing:border-box;}
+[hidden]{display:none !important;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Andika','Comic Sans MS',Verdana,sans-serif;
+  font-size:18px;
+  line-height:1.5;
+  -webkit-text-size-adjust:100%;
+}
+button{font-family:'Fredoka',sans-serif;font-size:18px;cursor:pointer;}
+input{font-family:'Andika',Verdana,sans-serif;}
+
+.topbar{
+  background:var(--paper);
+  border-bottom:3px solid var(--blue);
+  padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.brand{font-family:'Fredoka',sans-serif;font-size:22px;color:var(--blue);}
+.dots{display:flex;gap:9px;}
+.dot{width:16px;height:16px;border-radius:50%;background:#DCE3EE;}
+.dot.done{background:var(--green);}
+.dot.now{background:var(--blue);box-shadow:0 0 0 4px var(--blue-soft);}
+.count{font-size:16px;color:var(--muted);}
+.tablepill{
+  display:flex;align-items:center;gap:9px;
+  border:3px solid var(--blue);border-radius:12px;padding:4px 4px 4px 12px;
+  font-family:'Fredoka',sans-serif;font-size:16px;color:var(--blue);
+}
+.tablepill button{
+  border:none;background:var(--blue);color:#fff;
+  border-radius:8px;padding:5px 11px;font-size:15px;
+}
+
+main{max-width:1000px;margin:0 auto;padding:26px 16px 70px;}
+.card{
+  background:var(--paper);border-radius:22px;
+  padding:26px 20px 24px;
+  border:2px solid var(--blue-soft);
+  box-shadow:0 6px 0 var(--blue-soft);
+}
+
+/* ---------- menu ---------- */
+.menu h1{font-family:'Fredoka',sans-serif;font-size:26px;color:var(--blue);text-align:center;margin:0 0 4px;}
+.menu p.lede{text-align:center;color:var(--muted);font-size:17px;margin:0 0 22px;}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:13px;}
+.tile{
+  border:3px solid var(--blue-soft);border-radius:18px;
+  background:#fff;padding:16px 10px;text-align:center;
+  font-family:'Fredoka',sans-serif;
+}
+.tile:hover,.tile:focus-visible{border-color:var(--blue);background:var(--blue-soft);outline:none;}
+.tile .big{display:block;font-size:30px;color:var(--blue);line-height:1.15;}
+.tile .small{display:block;font-size:15px;color:var(--muted);font-family:'Andika',sans-serif;}
+.tile.mixed{border-color:var(--purple-soft);}
+.tile.mixed .big{color:var(--purple);}
+.tile.mixed:hover,.tile.mixed:focus-visible{border-color:var(--purple);background:var(--purple-soft);}
+
+/* ---------- problem ---------- */
+.equation{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  font-size:50px;font-weight:700;margin:6px 0 6px;flex-wrap:wrap;
+}
+.answer{
+  width:118px;height:78px;font-size:44px;font-weight:700;text-align:center;
+  border:3px dashed #C0CBDB;border-radius:16px;background:#FBFCFE;color:var(--ink);padding:0;
+}
+.answer:focus{outline:none;border-style:solid;border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px var(--blue-soft);}
+.answer.wrong{border-style:solid;border-color:var(--red);background:var(--red-soft);animation:shake .4s;}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.words{text-align:center;font-size:19px;color:var(--muted);margin:0 0 20px;}
+
+/* equation on the left, dots on the right */
+.split{display:flex;gap:28px;align-items:center;justify-content:center;}
+.split .left{flex:0 0 auto;}
+.split .right{flex:1 1 auto;min-width:0;}
+.split .words{margin-bottom:0;}
+@media (max-width:760px){
+  .split{flex-direction:column;gap:16px;}
+  .split .left{width:100%;}
+  .split .words{margin-bottom:4px;}
+}
+
+.groups{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:0 0 8px;}
+.group{
+  border:3px dashed var(--blue);border-radius:16px;background:var(--blue-soft);
+  padding:10px;display:grid;gap:6px;justify-content:center;
+}
+.pip{width:var(--dot);height:var(--dot);border-radius:50%;background:var(--purple);}
+.showbtn{
+  display:block;margin:6px auto 0;
+  border:3px solid var(--purple);background:#fff;color:var(--purple);
+  border-radius:14px;padding:11px 22px;
+}
+
+.feedback{min-height:30px;text-align:center;margin:18px 0 4px;font-size:20px;font-family:'Fredoka',sans-serif;}
+.feedback.good{color:var(--green);}
+.feedback.fix{color:var(--red);}
+.actions{display:flex;gap:12px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+.btn{border:none;border-radius:14px;padding:14px 30px;color:#fff;font-size:19px;}
+.btn.check{background:var(--blue);box-shadow:0 4px 0 #1D4E96;}
+.btn.next{background:var(--green);box-shadow:0 4px 0 #14764A;}
+.btn:active{transform:translateY(3px);box-shadow:none;}
+
+.done{text-align:center;padding:14px 4px;}
+.done .trophy{font-size:64px;}
+.done h2{font-family:'Fredoka',sans-serif;font-size:30px;color:var(--green);margin:6px 0;}
+.done p{color:var(--muted);margin:0 0 22px;}
+
+#confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:30;}
+.piece{position:absolute;top:-24px;width:12px;height:18px;border-radius:3px;animation:fall linear forwards;}
+@keyframes fall{to{transform:translateY(104vh) rotate(640deg);opacity:.9;}}
+
+@media (max-width:560px){
+  :root{--dot:15px;}
+  .equation{font-size:38px;gap:10px;}
+  .answer{width:96px;height:64px;font-size:36px;}
+  main{padding:18px 10px 60px;}
+  .card{padding:20px 12px;}
+  .group{padding:8px;gap:5px;}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">Multiplication Practice</div>
+  <div class="dots" id="dots" hidden></div>
+  <div class="count" id="count" hidden></div>
+  <div class="tablepill" id="tablepill" hidden>
+    <span id="tablename"></span>
+    <button type="button" id="changeBtn">Change</button>
+  </div>
+</div>
+
+<main>
+  <div class="card" id="card"></div>
+</main>
+<div id="confetti"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var CHEERS = [
+    "Nailed it!",
+    "That's exactly right!",
+    "You knew that one!",
+    "Sharp work!",
+    "Right on the money!",
+    "Quick thinking!",
+    "Perfect!"
+  ];
+  var WORDS = ['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
+
+  var card=document.getElementById('card');
+  var dotsEl=document.getElementById('dots');
+  var countEl=document.getElementById('count');
+  var pill=document.getElementById('tablepill');
+  var pillName=document.getElementById('tablename');
+
+  var state={ table:null, i:0, problems:[], p:null, answerBox:null };
+
+  function rnd(lo,hi){ return Math.floor(Math.random()*(hi-lo+1))+lo; }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function el(t,c){ var e=document.createElement(t); if(c) e.className=c; return e; }
+
+  /* ---------- problem set ---------- */
+  function buildSet(table){
+    var out=[], seen={};
+    while(out.length<4){
+      var a = (table==='mixed') ? rnd(1,10) : table;
+      var b = rnd(1,10);
+      var key=a+'x'+b;
+      if(seen[key]) continue;
+      seen[key]=true;
+      out.push({a:a,b:b,r:a*b});
+    }
+    return out;
+  }
+
+  /* ---------- menu ---------- */
+  function showMenu(){
+    dotsEl.hidden=true; countEl.hidden=true; pill.hidden=true;
+    card.innerHTML='';
+    var wrap=el('div','menu');
+    var h=el('h1'); h.textContent='Pick what to practise';
+    var l=el('p','lede'); l.textContent='Four problems, then you are done.';
+    wrap.appendChild(h); wrap.appendChild(l);
+
+    var tiles=el('div','tiles');
+    for(var n=1;n<=10;n++){
+      (function(n){
+        var t=el('button','tile'); t.type='button';
+        var big=el('span','big'); big.textContent=n+'\u00D7';
+        var sm=el('span','small'); sm.textContent=n+' \u00D7 1 to '+n+' \u00D7 10';
+        t.appendChild(big); t.appendChild(sm);
+        t.addEventListener('click', function(){ start(n); });
+        tiles.appendChild(t);
+      })(n);
+    }
+    var mx=el('button','tile mixed'); mx.type='button';
+    var mb=el('span','big'); mb.textContent='Mixed';
+    var ms=el('span','small'); ms.textContent='anything up to 10 \u00D7 10';
+    mx.appendChild(mb); mx.appendChild(ms);
+    mx.addEventListener('click', function(){ start('mixed'); });
+    tiles.appendChild(mx);
+
+    wrap.appendChild(tiles);
+    card.appendChild(wrap);
+  }
+
+  function start(table){
+    state.table=table;
+    state.i=0;
+    state.problems=buildSet(table);
+    pillName.textContent = (table==='mixed') ? 'Mixed' : table+'\u00D7 table';
+    pill.hidden=false; dotsEl.hidden=false; countEl.hidden=false;
+    render();
+  }
+
+  function renderDots(){
+    dotsEl.innerHTML='';
+    for(var k=0;k<4;k++){
+      var d=el('div','dot');
+      if(k<state.i) d.classList.add('done');
+      else if(k===state.i) d.classList.add('now');
+      dotsEl.appendChild(d);
+    }
+    countEl.textContent='Problem '+(state.i+1)+' of 4';
+  }
+
+  /* ---------- problem ---------- */
+  function render(){
+    var p=state.problems[state.i];
+    state.p=p;
+    renderDots();
+    card.innerHTML='';
+
+    var split=el('div','split');
+    var left=el('div','left');
+    var right=el('div','right');
+    split.appendChild(left); split.appendChild(right);
+    card.appendChild(split);
+
+    var eq=el('div','equation');
+    var lhs=el('span'); lhs.textContent=p.a+' \u00D7 '+p.b+' =';
+    var box=el('input','answer');
+    box.type='text'; box.maxLength=3; box.setAttribute('inputmode','numeric');
+    box.setAttribute('aria-label','answer');
+    box.addEventListener('input', function(){
+      box.value=box.value.replace(/[^0-9]/g,'').slice(0,3);
+      box.classList.remove('wrong');
+    });
+    box.addEventListener('keydown', function(e){ if(e.key==='Enter') doCheck(); });
+    eq.appendChild(lhs); eq.appendChild(box);
+    left.appendChild(eq);
+    state.answerBox=box;
+
+    var w=el('p','words');
+    w.textContent = WORDS[p.a]+' group'+(p.a===1?'':'s')+' of '+WORDS[p.b];
+    left.appendChild(w);
+
+    var groups=drawGroups(p);
+    var showFirst = (state.i<2);
+    groups.hidden = !showFirst;
+    right.appendChild(groups);
+
+    if(!showFirst){
+      var sb=el('button','showbtn'); sb.type='button';
+      sb.textContent='Show me the groups';
+      sb.addEventListener('click', function(){ groups.hidden=false; sb.hidden=true; });
+      right.appendChild(sb);
+    }
+
+    var fb=el('div','feedback'); fb.id='feedback';
+    card.appendChild(fb);
+
+    var acts=el('div','actions');
+    var chk=el('button','btn check'); chk.type='button'; chk.id='checkBtn';
+    chk.textContent='Check my work';
+    chk.addEventListener('click', doCheck);
+    var nxt=el('button','btn next'); nxt.type='button'; nxt.id='nextBtn'; nxt.hidden=true;
+    nxt.textContent = (state.i===3) ? 'See my finish' : 'Next problem';
+    nxt.addEventListener('click', function(){
+      state.i++;
+      if(state.i>3) finish(); else render();
+    });
+    acts.appendChild(chk); acts.appendChild(nxt);
+    card.appendChild(acts);
+  }
+
+  function drawGroups(p){
+    var g=el('div','groups');
+    for(var i=0;i<p.a;i++){
+      var one=el('div','group');
+      one.style.gridTemplateColumns='var(--dot)';
+      for(var j=0;j<p.b;j++) one.appendChild(el('div','pip'));
+      g.appendChild(one);
+    }
+    return g;
+  }
+
+  function doCheck(){
+    var box=state.answerBox;
+    var fb=document.getElementById('feedback');
+    if(box.value.trim()===String(state.p.r)){
+      box.classList.remove('wrong');
+      fb.className='feedback good';
+      fb.textContent=pick(CHEERS);
+      document.getElementById('checkBtn').hidden=true;
+      var n=document.getElementById('nextBtn');
+      n.hidden=false; n.focus();
+      confetti();
+    }else{
+      box.classList.add('wrong');
+      fb.className='feedback fix';
+      fb.textContent='Not yet. Count the groups again.';
+      box.focus();
+    }
+  }
+
+  function finish(){
+    dotsEl.innerHTML='';
+    for(var k=0;k<4;k++){ var d=el('div','dot done'); dotsEl.appendChild(d); }
+    countEl.textContent='Finished';
+    card.innerHTML='';
+    var w=el('div','done');
+    var t=el('div','trophy'); t.textContent='\u2B50';
+    var h=el('h2'); h.textContent='All four done!';
+    var p=el('p');
+    p.textContent = (state.table==='mixed')
+      ? 'Mixed facts, all the way through.'
+      : 'You worked through the '+state.table+'\u00D7 table.';
+    var b=el('button','btn next'); b.type='button'; b.textContent='Pick another set';
+    b.addEventListener('click', showMenu);
+    w.appendChild(t); w.appendChild(h); w.appendChild(p); w.appendChild(b);
+    card.appendChild(w);
+    confetti();
+  }
+
+  document.getElementById('changeBtn').addEventListener('click', showMenu);
+
+  function confetti(){
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var box=document.getElementById('confetti');
+    var colors=['#1F9D62','#2C6FD1','#7248B4','#4FC08D','#89B6F0'];
+    for(var i=0;i<70;i++){
+      var d=el('div','piece');
+      d.style.left=(Math.random()*100)+'%';
+      d.style.background=pick(colors);
+      d.style.animationDelay=(Math.random()*0.45)+'s';
+      d.style.animationDuration=(1.5+Math.random()*1.3)+'s';
+      d.style.width=(8+Math.random()*8)+'px';
+      box.appendChild(d);
+    }
+    setTimeout(function(){ box.innerHTML=''; },3400);
+  }
+
+  showMenu();
+})();
+</script>
+</body>
+</html>
